@@ -187,6 +187,8 @@ end
 
 local function SlotMachineHandler()
     local LeverScene = 0
+    local lastChipRefresh = -1000
+    local chipRefreshPending = false
     local IdleScene = NetworkCreateSynchronisedScene(ClosestSlotCoord, ClosestSlotRotation, 2, 2, 0, 1.0, 0, 1.0)
     LoadAnimDict(AnimDict)
     local RandomAnimName = RandomIdle[math.random(1, #RandomIdle)]
@@ -195,9 +197,17 @@ local function SlotMachineHandler()
     exports['qb-core']:DrawText('<strong>Spin:</strong> ↵<br><strong>Leave: </strong>←<br><strong>Adjust Bet:</strong> ↑')
     CreateThread(function()
         while true do
-            QBCore.Functions.TriggerCallback('ry::server:CasinoChipsAmount', function(result)
-                exports['casinoUi']:DrawCasinoUi('show', "The Diamond Casino & Resort Slots</p>"..SlotReferences[ClosestSlotModel].name.."</p>Availble chips: "..math.floor(result))   
-            end)
+            local now = GetGameTimer()
+            if not chipRefreshPending and now - lastChipRefresh >= 1000 then
+                lastChipRefresh = now
+                chipRefreshPending = true
+                QBCore.Functions.TriggerCallback('ry::server:CasinoChipsAmount', function(result)
+                    chipRefreshPending = false
+                    if EnteredSlot then
+                        exports['casinoUi']:DrawCasinoUi('show', "The Diamond Casino & Resort Slots</p>"..SlotReferences[ClosestSlotModel].name.."</p>Available chips: "..math.floor(result))
+                    end
+                end)
+            end
             if not IsSpinning then
                 if IsControlJustPressed(0, 202) then -- BACKSPACE 
                     local LeaveScene = NetworkCreateSynchronisedScene(ClosestSlotCoord, ClosestSlotRotation, 2, 2, 0, 1.0, 0, 1.0)
