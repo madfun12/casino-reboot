@@ -74,14 +74,21 @@ end)
 
 RegisterNetEvent('dc-casino:slots:server:spin', function(ChosenBetAmount)
     local src = source
+    local slot = Slots[src]
+    if not slot then return end
+
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then
+        LeaveSlot(src)
+        return
+    end
+
     local SpinTime = math.random(4000, 6000)
     local ReelRewards = {math.random(0, 15), math.random(0, 15), math.random(0, 15)}
-    local SlotHeading = GetEntityHeading(Slots[src].Slot)
-    local SlotModel = GetEntityModel(Slots[src].Slot)
-    local Player = QBCore.Functions.GetPlayer(src)
+    local SlotHeading = GetEntityHeading(slot.Slot)
+    local SlotModel = GetEntityModel(slot.Slot)
 
-    if not Slots[src] then return end
-    if not SlotReferences[SlotModel].betamounts[ChosenBetAmount] then return end
+    if not SlotReferences[SlotModel] or not SlotReferences[SlotModel].betamounts[ChosenBetAmount] then return end
     if UseCash and Player.Functions.RemoveMoney('cash', SlotReferences[SlotModel].betamounts[ChosenBetAmount], 'Casino Slot Spin')
     or UseBank and Player.Functions.RemoveMoney('bank', SlotReferences[SlotModel].betamounts[ChosenBetAmount], 'Casino Slot Spin')
     -- luacheck: ignore
@@ -143,20 +150,13 @@ AddEventHandler("playerDropped", function()
     LeaveSlot(source)
 end)
 
-local ItemList = {
-    ["casino_chip"] = 1
-}
 QBCore.Functions.CreateCallback('ry::server:CasinoChipsAmount', function(source, cb)
-    local retval = 0
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then 
-        for k, v in pairs(Player.PlayerData.items) do 
-            if Player.PlayerData.items[k] ~= nil then 
-                if ItemList[Player.PlayerData.items[k].name] ~= nil then 
-                    retval = retval + (ItemList[Player.PlayerData.items[k].name] * Player.PlayerData.items[k].amount)
-                end
-            end
-        end
+    if not Player then
+        cb(0)
+        return
     end
-    cb(retval) 
+
+    local chips = Player.Functions.GetItemByName('casino_chip')
+    cb(chips and chips.amount or 0)
 end)
