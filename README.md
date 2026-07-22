@@ -57,7 +57,9 @@ Add the following line of code to the file:
 -- Casino Items
 ["casino_chip"]              = {["name"] = "casino_chip",            ["label"] = "Betting Chips",       ["weight"] = 3,         ["type"] = "item",      ["image"] = "casino_chip.png",              ["unique"] = false,     ["useable"] = false,    ["shouldClose"] = false,   ["combinable"] = nil,   ["description"] = "Diamond Casino Chips"},
 
-Casino and VIP memberships are permanently stored in QBCore player metadata. They do not require item definitions, inventory images, or a separate SQL migration. Existing `casino_member` and `casino_vip` items are converted automatically the next time the player loads in.
+Casino and VIP memberships are permanently stored in QBCore player metadata. They do not require item definitions, inventory images, or a separate SQL migration. Existing `casino_member` and `casino_vip` inventory items are converted automatically the next time the player loads in.
+
+`casino-walls` locks qb-inventory and weapon controls inside the casino. Adjust the zone or disable either restriction in `casino-walls/config.lua` for a custom MLO.
 
 **4. Restart Your Server**
 

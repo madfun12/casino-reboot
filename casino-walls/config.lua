@@ -18,3 +18,13 @@ Config.SendWelcomeMail = true -- Sends a email to players phone on entering casi
 Config.WelcomeMailsender = "The Diamond Casino & Resort"
 Config.WelcomeMailsubject ="Welcome!"
 Config.WelcomeMailmessage = "Welcome to The Diamond Casino & Resort, We are Open 24/7 & only accept Electronic Transactions"
+
+-- Prevent qb-inventory access and weapon use within the casino footprint.
+-- Set debugPoly to true temporarily if this needs adjustment for a custom MLO.
+Config.RestrictInventoryInCasino = true
+Config.DisableWeaponsInCasino = true
+Config.InventoryRestrictionZone = {
+    center = vector3(945.85, 41.58, 72.0),
+    radius = 70.0,
+    debugPoly = false,
+}

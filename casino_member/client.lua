@@ -42,7 +42,7 @@ Citizen.CreateThread(function()
                 {
                     type = "client",
                     event = "casino:client:buyCasinoMember",
-                    icon = "fas fa-id-card",
+                    icon = "fas fa-user-check",
                     label = "Buy a Casino Membership - $5,000",
                     canInteract = function()
                         return not hasMembership()

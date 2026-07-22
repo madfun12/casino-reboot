@@ -35,7 +35,7 @@ local function migrateLegacyCards(Player)
         Player.Functions.RemoveItem('casino_vip', vipCard.amount)
     end
 
-    TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, 'Your legacy casino card has been converted to a permanent membership.', 'success')
+    TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, 'Your casino membership is now permanently linked to your player.', 'success')
 end
 
 AddEventHandler('QBCore:Server:OnPlayerLoaded', function(Player)

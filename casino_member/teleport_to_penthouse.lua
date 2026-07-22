@@ -36,7 +36,7 @@ RegisterNetEvent('casino:teleportToPenthouse', function()
             SetEntityCoords(PlayerPedId(), penthouseCoords.x, penthouseCoords.y, penthouseCoords.z)
             QBCore.Functions.Notify("Welcome to the Penthouse!", "success")
         else
-            QBCore.Functions.Notify("You need a VIP pass to access the Penthouse.", "error")
+            QBCore.Functions.Notify("You need a VIP membership to access the Penthouse.", "error")
         end
     end)
 end)
