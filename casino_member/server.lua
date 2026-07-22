@@ -1,35 +1,97 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
--- Buying a casino member item
-RegisterNetEvent("casino:server:buyCasinoMember", function()
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    local totalCost = 5000 -- Set the price for a casino_member item
+local MEMBERSHIP_PRICE = 5000
+local VIP_PRICE = 50000
 
-    -- Check if the player has enough money
-    if Player.Functions.GetMoney("bank") >= totalCost then
-        Player.Functions.RemoveMoney("bank", totalCost)
-        Player.Functions.AddItem("casino_member", 1) -- Add one casino_member item
-        TriggerClientEvent('QBCore:Notify', src, "You bought a Casino Membership", "success")
-    else
-        TriggerClientEvent('QBCore:Notify', src, "Not enough money in your bank", "error")
+local function getMetadata(Player)
+    return Player.PlayerData.metadata or {}
+end
+
+local function hasMembership(Player)
+    local metadata = getMetadata(Player)
+    return metadata.casinoMembership == true or metadata.casinoVip == true
+end
+
+local function hasVipMembership(Player)
+    return getMetadata(Player).casinoVip == true
+end
+
+local function migrateLegacyCards(Player)
+    local memberCard = Player.Functions.GetItemByName('casino_member')
+    local vipCard = Player.Functions.GetItemByName('casino_vip')
+
+    if not memberCard and not vipCard then
+        return
     end
+
+    if memberCard then
+        Player.Functions.SetMetaData('casinoMembership', true)
+        Player.Functions.RemoveItem('casino_member', memberCard.amount)
+    end
+
+    if vipCard then
+        Player.Functions.SetMetaData('casinoMembership', true)
+        Player.Functions.SetMetaData('casinoVip', true)
+        Player.Functions.RemoveItem('casino_vip', vipCard.amount)
+    end
+
+    TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, 'Your legacy casino card has been converted to a permanent membership.', 'success')
+end
+
+AddEventHandler('QBCore:Server:OnPlayerLoaded', function(Player)
+    migrateLegacyCards(Player)
 end)
 
--- Buying a casino VIP item
-RegisterNetEvent("casino:server:buyCasinoVIP", function()
+RegisterNetEvent('casino:server:buyCasinoMember', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
-    local totalCost = 50000 -- Set the price for a casino_vip item
-
-    -- Check if the player has enough money
-    if Player.Functions.GetMoney("bank") >= totalCost then
-        Player.Functions.RemoveMoney("bank", totalCost)
-        Player.Functions.AddItem("casino_vip", 1) -- Add one casino_vip item
-        TriggerClientEvent('QBCore:Notify', src, "You bought a Casino VIP Membership", "success")
-    else
-        TriggerClientEvent('QBCore:Notify', src, "Not enough money in your bank", "error")
+    if not Player then
+        return
     end
+
+    migrateLegacyCards(Player)
+
+    if hasVipMembership(Player) then
+        TriggerClientEvent('QBCore:Notify', src, 'You already have a VIP casino membership.', 'error')
+        return
+    end
+
+    if hasMembership(Player) then
+        TriggerClientEvent('QBCore:Notify', src, 'You already have a casino membership. Upgrade to VIP at the front desk.', 'error')
+        return
+    end
+
+    if Player.Functions.GetMoney('bank') < MEMBERSHIP_PRICE then
+        TriggerClientEvent('QBCore:Notify', src, 'Not enough money in your bank.', 'error')
+        return
+    end
+
+    Player.Functions.RemoveMoney('bank', MEMBERSHIP_PRICE, 'casino-membership')
+    Player.Functions.SetMetaData('casinoMembership', true)
+    TriggerClientEvent('QBCore:Notify', src, 'Casino membership purchased.', 'success')
 end)
 
--- You would also create a corresponding client.lua to interact with the NPC
+RegisterNetEvent('casino:server:buyCasinoVIP', function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then
+        return
+    end
+
+    migrateLegacyCards(Player)
+
+    if hasVipMembership(Player) then
+        TriggerClientEvent('QBCore:Notify', src, 'You already have a VIP casino membership.', 'error')
+        return
+    end
+
+    if Player.Functions.GetMoney('bank') < VIP_PRICE then
+        TriggerClientEvent('QBCore:Notify', src, 'Not enough money in your bank.', 'error')
+        return
+    end
+
+    Player.Functions.RemoveMoney('bank', VIP_PRICE, 'casino-vip-membership')
+    Player.Functions.SetMetaData('casinoMembership', true)
+    Player.Functions.SetMetaData('casinoVip', true)
+    TriggerClientEvent('QBCore:Notify', src, 'VIP casino membership purchased.', 'success')
+end)

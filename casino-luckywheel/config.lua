@@ -24,12 +24,12 @@ Config.LimitedSpinResetTime = '00:00' 	-- 24 hour clock
 Config.Prices = {
 	[1]  = {type = 'car', 		name = 'car', 					count = 1, 		sound = 'car', 		probability = {a =   0, b =   1}},	--  0.1 %   0.1 -- VEHICLE
 	[2]  = {type = 'money', 	name = 'money', 				count = 15000, 	sound = 'cash', 	probability = {a =   1, b =   5}},	--  0.4 %   0.5 -- 15.000 RP
-	[3]  = {type = 'item', 		name = 'casino_vip', 			count = 1, 		sound = 'clothes', 	probability = {a =   5, b =  10}},	--  0.5 %   1.0 -- CLOTHING
+	[3]  = {type = 'item', 		name = 'casino_chip', 			count = 5000, 	sound = 'chips', 		probability = {a =   5, b =  10}},	--  0.5 %   1.0 -- 5,000 chips
 	[4]  = {type = 'item', 		name = 'casino_chip', 		count = 25000, 	sound = 'chips', 	probability = {a =  10, b =  20}},	--  1.0 %   2.0 -- 25.000 chips
 	[5]  = {type = 'money', 	name = 'money', 				count = 40000, 	sound = 'cash', 	probability = {a =  20, b =  40}},	--  2.0 %   4.0 -- 40.000 $
 	[6]  = {type = 'money', 	name = 'money', 				count = 10000, 	sound = 'cash', 	probability = {a =  40, b =  60}},	--  2.0 %   6.0 -- 10.000 RP
 	[7]  = {type = 'item', 		name = 'sandwich', 				count = 1, 		sound = 'clothes', 	probability = {a =  60, b =  80}},	--  4.0 %   8.0 -- CLOTHING
-	[8]  = {type = 'item', 		name = 'casino_vip',  			count = 1, 		sound = 'mystery', 	probability = {a =  80, b = 120}},	--  4.0 %  12.0 -- MYSTERY
+	[8]  = {type = 'item', 		name = 'casino_chip',  			count = 10000,	sound = 'chips', 		probability = {a =  80, b = 120}},	--  4.0 %  12.0 -- 10,000 chips
 	[9]  = {type = 'item', 		name = 'casino_chip', 		count = 20000, 	sound = 'chips', 	probability = {a = 120, b = 170}},	--  5.0 %  17.0 -- 20.000 chips
 	[10] = {type = 'money', 	name = 'money', 				count = 7500, 	sound = 'cash', 	probability = {a = 170, b = 250}},	--  5.0 %  22.0 -- 7.500 RP
 	[11] = {type = 'item',		name = 'sandwich', 				count = 1, 		sound = 'clothes', 	probability = {a = 250, b = 300}},	--  6.0 %  28.0 -- CLOTHING

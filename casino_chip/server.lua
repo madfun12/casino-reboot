@@ -5,10 +5,10 @@ RegisterNetEvent("casino:server:buyCasinoChip", function(amount)
     local Player = QBCore.Functions.GetPlayer(src)
     local totalCost = amount
 
-    -- Check if player has at least one 'casino_member' item
-    local casinoMembership = Player.Functions.GetItemByName("casino_member")
+    local metadata = Player.PlayerData.metadata or {}
+    local casinoMembership = metadata.casinoMembership == true or metadata.casinoVip == true
 
-    if casinoMembership and casinoMembership.amount > 0 then
+    if casinoMembership then
         if Player.Functions.GetMoney("bank") >= totalCost then
             Player.Functions.RemoveMoney("bank", totalCost)
             Player.Functions.AddItem("casino_chip", amount)

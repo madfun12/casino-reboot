@@ -40,24 +40,24 @@ Vault: A potential future location for a heist? Who knows, maybe one day you can
 
 Drag and drop into the [Casino Reboot] folder.
 
-**2. Add inventory Images**
+**2. Add inventory Image**
 
 Navigate to the following directory in your server files:
 resources\[qb]\qb-inventory\html\images
 
-Copy the provided PNG files and paste them into the images folder.
+Copy `casino_chip.png` into the images folder.
 
 **3. Add Casino Items**
 
 Open the items.lua file in the following directory:
 resources\[qb]\qb-core\shared\items.lua
 
-Add the following lines of code to the file:
+Add the following line of code to the file:
 
 -- Casino Items
 ["casino_chip"]              = {["name"] = "casino_chip",            ["label"] = "Betting Chips",       ["weight"] = 3,         ["type"] = "item",      ["image"] = "casino_chip.png",              ["unique"] = false,     ["useable"] = false,    ["shouldClose"] = false,   ["combinable"] = nil,   ["description"] = "Diamond Casino Chips"},
-["casino_member"]            = {["name"] = "casino_member",          ["label"] = "Member Card",         ["weight"] = 50,        ["type"] = "item",      ["image"] = "casino_member.png",            ["unique"] = true,      ["useable"] = false,    ["shouldClose"] = false,   ["combinable"] = nil,   ["description"] = "Diamond Casino Membership Card"},
-["casino_vip"]               = {["name"] = "casino_vip",             ["label"] = "V.I.P Pass",          ["weight"] = 70,        ["type"] = "item",      ["image"] = "casino_vip.png",               ["unique"] = true,      ["useable"] = false,    ["shouldClose"] = false,   ["combinable"] = nil,   ["description"] = "Diamond Casino V.I.P ALL ACCESS Pass"},
+
+Casino and VIP memberships are permanently stored in QBCore player metadata. They do not require item definitions, inventory images, or a separate SQL migration. Existing `casino_member` and `casino_vip` items are converted automatically the next time the player loads in.
 
 **4. Restart Your Server**
 

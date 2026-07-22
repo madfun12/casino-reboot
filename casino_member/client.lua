@@ -11,6 +11,19 @@ local pedHeading = {
     60.0   -- Second ped heading
 }
 
+local function getMembershipMetadata()
+    return QBCore.Functions.GetPlayerData().metadata or {}
+end
+
+local function hasMembership()
+    local metadata = getMembershipMetadata()
+    return metadata.casinoMembership == true or metadata.casinoVip == true
+end
+
+local function hasVipMembership()
+    return getMembershipMetadata().casinoVip == true
+end
+
 Citizen.CreateThread(function()
     RequestModel(pedModel)
     while not HasModelLoaded(pedModel) do
@@ -31,12 +44,18 @@ Citizen.CreateThread(function()
                     event = "casino:client:buyCasinoMember",
                     icon = "fas fa-id-card",
                     label = "Buy a Casino Membership - $5,000",
+                    canInteract = function()
+                        return not hasMembership()
+                    end,
                 },
                 {
                     type = "client",
                     event = "casino:client:buyCasinoVIP",
                     icon = "fas fa-star",
                     label = "Buy a Casino VIP Membership - $50,000",
+                    canInteract = function()
+                        return not hasVipMembership()
+                    end,
                 },
             },
             distance = 3.0 -- Adjust to your preferred distance
